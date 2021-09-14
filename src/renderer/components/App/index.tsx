@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import axios from "axios";
-import type { AxiosError } from "axios";
+// import axios from "axios";
+// import type { AxiosError } from "axios";
 
 import Header from "../Header";
 import Start from "../Start";

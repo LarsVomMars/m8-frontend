@@ -36,6 +36,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
 
     onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
+        // eslint-disable-next-line
         this.setState({ [name]: value } as Pick<DepositState, any>);
     };
 
