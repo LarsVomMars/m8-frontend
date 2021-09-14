@@ -1,0 +1,38 @@
+@import "../Header/Header.scss";
+@import "../Start/Start.scss";
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url("../../assets/fonts/Ubuntu.ttf");
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    font-family: "Ubuntu";
+}
+
+.main-container {
+    font-size: calc(10px + 2vmin);
+    height: 100vh;
+    width: 100vw;
+    background-color: #2c2c2c;
+
+    .pages {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        .page-div {
+            width: 60vw;
+
+            .heading {
+                text-align: center;
+                color: white;
+            }
+        }
+    }
+}

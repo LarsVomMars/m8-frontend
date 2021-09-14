@@ -1,11 +1,12 @@
 import React from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import axios from "axios";
+import type { AxiosError } from "axios";
+
+import Start from "../Start";
+import Header from "../Header";
+
+import "./App.global.scss";
 
 export enum ApiPermissions {
     READ,
@@ -13,29 +14,23 @@ export enum ApiPermissions {
     ADMIN,
 }
 
-export default class App extends React.Component<
-    Record<string, never>,
-    AppState
-> {
+export default class App extends React.Component<Record<string, never>, AppState> {
     constructor(props: Record<string, never>) {
         super(props);
         this.state = {
-            authorized: false,
+            authorized: true,
             isUser: true,
-            isAdmin: false,
+            isAdmin: true,
         };
     }
 
-    async componentDidMount() {
+    /* async componentDidMount() {
         try {
-            const resp = await axios.get(
-                `${process.env.REACT_APP_SERVER_URL}/auth/`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}`,
-                    },
-                }
-            );
+            const resp = await axios.get(`${process.env.REACT_APP_SERVER_URL}/auth/`, {
+                headers: {
+                    Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}`,
+                },
+            });
             console.log(resp.data);
             const { permission } = resp.data;
             this.setState({
@@ -44,20 +39,22 @@ export default class App extends React.Component<
                 authorized: true,
             });
         } catch (e) {
-            console.error(e.response);
+            console.error((e as AxiosError).response);
+            console.log("Ignore this error");
         }
-    }
+    } */
 
     render() {
         const { isUser, isAdmin, authorized } = this.state;
         return (
             <div className="main-container">
-                {authorized && (
+                <Header />
+                {authorized && isUser && (
                     <div className="pages">
                         <Router>
                             <Switch>
                                 <Route exact path="/">
-                                    {isUser ? <h2>User</h2> : <h2>Admin</h2>}
+                                    <Start admin={isAdmin} />
                                 </Route>
                                 {isAdmin && (
                                     <div>
