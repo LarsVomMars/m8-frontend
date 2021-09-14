@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import axios from "axios";
 import type { AxiosError } from "axios";
 
-import Start from "../Start";
 import Header from "../Header";
+import Start from "../Start";
+import Deposit from "../Deposit";
 
 import "./App.global.scss";
 
@@ -14,8 +15,8 @@ export enum ApiPermissions {
     ADMIN,
 }
 
-export default class App extends React.Component<Record<string, never>, AppState> {
-    constructor(props: Record<string, never>) {
+export default class App extends React.Component<EO, AppState> {
+    constructor(props: EO) {
         super(props);
         this.state = {
             authorized: true,
@@ -59,7 +60,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                                 {isAdmin && (
                                     <div>
                                         <Route path="/deposit">
-                                            <h1>Deposit</h1>
+                                            <Deposit />
                                         </Route>
                                         <Route path="/buy">
                                             <h1>Buy</h1>
@@ -95,3 +96,5 @@ export interface AppState {
     isUser: boolean;
     isAdmin: boolean;
 }
+
+export type EO = Record<string, never>;
