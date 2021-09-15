@@ -6,14 +6,12 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import Header from "../Header";
 import Start from "../Start";
 import Deposit from "../Deposit";
+import Buy from "../Buy";
+import User from "../User";
+
+import type { EO } from "../types";
 
 import "./App.global.scss";
-
-export enum ApiPermissions {
-    READ,
-    WRITE,
-    ADMIN,
-}
 
 export default class App extends React.Component<EO, AppState> {
     constructor(props: EO) {
@@ -63,10 +61,10 @@ export default class App extends React.Component<EO, AppState> {
                                             <Deposit />
                                         </Route>
                                         <Route path="/buy">
-                                            <h1>Buy</h1>
+                                            <Buy />
                                         </Route>
                                         <Route path="/user">
-                                            <h1>User</h1>
+                                            <User />
                                         </Route>
                                         <Route path="/clear">
                                             <h1>Clear</h1>
@@ -96,5 +94,3 @@ export interface AppState {
     isUser: boolean;
     isAdmin: boolean;
 }
-
-export type EO = Record<string, never>;

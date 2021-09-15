@@ -1,6 +1,8 @@
 @import "../Header/Header.scss";
 @import "../Start/Start.scss";
 @import "../Deposit/Deposit.scss";
+@import "../Buy/Buy.scss";
+@import "../User/User.scss";
 
 @font-face {
     font-family: "Ubuntu";
@@ -33,6 +35,15 @@
             .heading {
                 text-align: center;
                 color: white;
+            }
+
+            .basic-form {
+                display: flex;
+                flex-flow: column wrap;
+
+                > * {
+                    margin: 5px;
+                }
             }
         }
     }

@@ -1,13 +1,14 @@
 import React from "react";
-import axios from "axios";
 import { Button, InputAdornment, TextField } from "@material-ui/core";
-import type { AxiosError } from "axios";
+import axios from "axios";
+
 import type { ChangeEvent, FormEvent } from "react";
+import type { AxiosError } from "axios";
 import type { EO } from "../types";
 
-import "./Deposit.scss";
+import "./User.scss";
 
-export default class Deposit extends React.Component<EO, DepositState> {
+export default class User extends React.Component<EO, UserState> {
     constructor(props: EO) {
         super(props);
         this.state = {
@@ -20,11 +21,10 @@ export default class Deposit extends React.Component<EO, DepositState> {
     }
 
     onSubmit = async (event: FormEvent) => {
-        // TODO: Swal
         event.preventDefault();
         try {
-            const resp = await axios.put(
-                `${process.env.REACT_APP_SERVER_URL}/api/transaction/deposit`,
+            const resp = await axios.post(
+                `${process.env.REACT_APP_SERVER_URL}/api/user`,
                 this.state,
                 { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
             );
@@ -37,15 +37,15 @@ export default class Deposit extends React.Component<EO, DepositState> {
     onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         // eslint-disable-next-line
-        this.setState({ [name]: value } as Pick<DepositState, any>);
+        this.setState({ [name]: value } as Pick<UserState, any>);
     };
 
     render() {
         const { balance, adminQR, adminPin, userQR, userPin } = this.state;
         return (
             <div className="page-div">
-                <h1 className="heading">Deposit</h1>
-                <form className="deposit-form basic-form" onSubmit={this.onSubmit}>
+                <h1 className="heading">Add</h1>
+                <form className="add-form basic-form" onSubmit={this.onSubmit}>
                     <TextField
                         value={balance}
                         onChange={this.onChange}
@@ -57,12 +57,14 @@ export default class Deposit extends React.Component<EO, DepositState> {
                             ),
                             inputProps: {
                                 step: 0.1,
+                                min: 0,
+                                max: 100,
                             },
                         }}
                         name="balance"
                         label="Balance"
                         size="small"
-                        className="deposit-form-input"
+                        className="add-form-input"
                         required
                     />
                     <TextField
@@ -72,7 +74,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="Admin QR"
                         size="small"
-                        className="deposit-form-input"
+                        className="add-form-input"
                         required
                     />
                     <TextField
@@ -82,7 +84,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="Admin Pin"
                         size="small"
-                        className="deposit-form-input"
+                        className="add-form-input"
                         type="password"
                         required
                         InputProps={{
@@ -99,7 +101,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="User QR"
                         size="small"
-                        className="deposit-form-input"
+                        className="add-form-input"
                         required
                     />
                     <TextField
@@ -109,7 +111,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="User Pin"
                         size="small"
-                        className="deposit-form-input"
+                        className="add-form-input"
                         type="password"
                         required
                         InputProps={{
@@ -122,7 +124,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                     <Button
                         variant="contained"
                         color="primary"
-                        className="deposit-form-input"
+                        className="add-form-input"
                         type="submit"
                     >
                         Submit
@@ -133,7 +135,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
     }
 }
 
-export interface DepositState {
+export interface UserState {
     balance: number;
     adminQR: string;
     adminPin: string;

@@ -1,30 +1,55 @@
 import React from "react";
 import axios from "axios";
-import { Button, InputAdornment, TextField } from "@material-ui/core";
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from "@material-ui/core";
+
 import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
-import type { EO } from "../types";
+import type { EO, IProduct } from "../types";
 
-import "./Deposit.scss";
+import "./Buy.scss";
 
-export default class Deposit extends React.Component<EO, DepositState> {
+export default class Buy extends React.Component<EO, BuyState> {
     constructor(props: EO) {
         super(props);
         this.state = {
-            balance: 0,
+            pid: "",
             adminQR: "",
             adminPin: "",
             userQR: "",
             userPin: "",
+            products: [],
         };
     }
 
+    componentDidMount = async () => {
+        try {
+            const resp = await axios.get(
+                `${process.env.REACT_APP_SERVER_URL}/api/products/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}`,
+                    },
+                }
+            );
+            this.setState({ products: resp.data.products as IProduct[] });
+            console.log(resp.data);
+        } catch (e) {
+            console.error((e as AxiosError).response);
+        }
+    };
+
     onSubmit = async (event: FormEvent) => {
-        // TODO: Swal
         event.preventDefault();
         try {
-            const resp = await axios.put(
-                `${process.env.REACT_APP_SERVER_URL}/api/transaction/deposit`,
+            const resp = await axios.post(
+                `${process.env.REACT_APP_SERVER_URL}/api/transaction/buy`,
                 this.state,
                 { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
             );
@@ -37,34 +62,49 @@ export default class Deposit extends React.Component<EO, DepositState> {
     onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         // eslint-disable-next-line
-        this.setState({ [name]: value } as Pick<DepositState, any>);
+        this.setState({ [name]: value } as Pick<BuyState, any>);
+    };
+
+    onSelectChange = (event: ChangeEvent<{ name?: string; value: unknown }>) => {
+        const { name, value } = event.target as HTMLSelectElement;
+        // eslint-disable-next-line
+        this.setState({ [name!]: value as string } as Pick<BuyState, any>);
     };
 
     render() {
-        const { balance, adminQR, adminPin, userQR, userPin } = this.state;
+        const { pid, userQR, userPin, adminQR, adminPin, products } = this.state;
         return (
             <div className="page-div">
-                <h1 className="heading">Deposit</h1>
-                <form className="deposit-form basic-form" onSubmit={this.onSubmit}>
-                    <TextField
-                        value={balance}
-                        onChange={this.onChange}
-                        type="number"
+                <h1 className="heading">Buy</h1>
+                <form className="buy-form basic-form">
+                    <FormControl
                         variant="outlined"
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">€</InputAdornment>
-                            ),
-                            inputProps: {
-                                step: 0.1,
-                            },
-                        }}
-                        name="balance"
-                        label="Balance"
+                        className="buy-form-select"
                         size="small"
-                        className="deposit-form-input"
-                        required
-                    />
+                    >
+                        <InputLabel htmlFor="buy-select">Product</InputLabel>
+                        <Select
+                            id="buy-select"
+                            value={pid}
+                            onChange={this.onSelectChange}
+                            label="Product"
+                            name="pid"
+                            required
+                        >
+                            <MenuItem value="" key="-1" disabled>
+                                <em>None</em>
+                            </MenuItem>
+                            {products.map((product) => (
+                                <MenuItem
+                                    value={product._id}
+                                    disabled={product.amount === 0}
+                                    key={product._id}
+                                >
+                                    {product.name} - {product.price}€
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         value={adminQR}
                         onChange={this.onChange}
@@ -72,7 +112,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="Admin QR"
                         size="small"
-                        className="deposit-form-input"
+                        className="buy-form-input"
                         required
                     />
                     <TextField
@@ -82,7 +122,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="Admin Pin"
                         size="small"
-                        className="deposit-form-input"
+                        className="buy-form-input"
                         type="password"
                         required
                         InputProps={{
@@ -99,7 +139,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="User QR"
                         size="small"
-                        className="deposit-form-input"
+                        className="buy-form-input"
                         required
                     />
                     <TextField
@@ -109,7 +149,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                         variant="outlined"
                         label="User Pin"
                         size="small"
-                        className="deposit-form-input"
+                        className="buy-form-input"
                         type="password"
                         required
                         InputProps={{
@@ -122,7 +162,7 @@ export default class Deposit extends React.Component<EO, DepositState> {
                     <Button
                         variant="contained"
                         color="primary"
-                        className="deposit-form-input"
+                        className="buy-form-input"
                         type="submit"
                     >
                         Submit
@@ -133,10 +173,11 @@ export default class Deposit extends React.Component<EO, DepositState> {
     }
 }
 
-export interface DepositState {
-    balance: number;
+export interface BuyState {
+    pid: string;
     adminQR: string;
     adminPin: string;
     userQR: string;
     userPin: string;
+    products: IProduct[];
 }
