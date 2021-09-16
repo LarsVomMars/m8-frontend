@@ -11,12 +11,12 @@ import "./Clear.scss";
 export default class Clear extends React.Component<EO, ClearState> {
     constructor(props: EO) {
         super(props);
-        this.setState({
+        this.state = {
             adminQR: "",
             adminPin: "",
             userQR: "",
             userPin: "",
-        });
+        };
     }
 
     onChange = (event: ChangeEvent<HTMLInputElement>) => {

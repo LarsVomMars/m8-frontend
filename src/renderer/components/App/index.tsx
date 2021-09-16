@@ -13,6 +13,7 @@ import User from "../User";
 import Clear from "../Clear";
 
 import "./App.global.scss";
+import Products from "../Products";
 
 export default class App extends React.Component<EO, AppState> {
     constructor(props: EO) {
@@ -70,7 +71,7 @@ export default class App extends React.Component<EO, AppState> {
                                             <Clear />
                                         </Route>
                                         <Route path="/products">
-                                            <h1>Products</h1>
+                                            <Products />
                                         </Route>
                                         <Route path="/admin">
                                             <h1>Admin</h1>
