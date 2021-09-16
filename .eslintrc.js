@@ -5,6 +5,7 @@ module.exports = {
         "import/no-extraneous-dependencies": "off",
         "no-console": "off",
         "no-underscore-dangle": "off",
+        "no-restricted-syntax": "off",
     },
     parserOptions: {
         ecmaVersion: 2020,

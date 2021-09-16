@@ -1,15 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-// import axios from "axios";
-// import type { AxiosError } from "axios";
+import axios from "axios";
+
+import type { AxiosError } from "axios";
+import { EO } from "../types";
 
 import Header from "../Header";
 import Start from "../Start";
 import Deposit from "../Deposit";
 import Buy from "../Buy";
 import User from "../User";
-
-import type { EO } from "../types";
+import Clear from "../Clear";
 
 import "./App.global.scss";
 
@@ -23,7 +24,7 @@ export default class App extends React.Component<EO, AppState> {
         };
     }
 
-    /* async componentDidMount() {
+    componentDidMount = async () => {
         try {
             const resp = await axios.get(`${process.env.REACT_APP_SERVER_URL}/auth/`, {
                 headers: {
@@ -31,17 +32,16 @@ export default class App extends React.Component<EO, AppState> {
                 },
             });
             console.log(resp.data);
-            const { permission } = resp.data;
-            this.setState({
-                isAdmin: permission === ApiPermissions.ADMIN,
-                isUser: permission === ApiPermissions.READ,
-                authorized: true,
-            });
+            // const { permission } = resp.data;
+            // this.setState({
+            //     isAdmin: permission === ApiPermissions.ADMIN,
+            //     isUser: permission === ApiPermissions.READ,
+            //     authorized: true,
+            // });
         } catch (e) {
             console.error((e as AxiosError).response);
-            console.log("Ignore this error");
         }
-    } */
+    };
 
     render() {
         const { isUser, isAdmin, authorized } = this.state;
@@ -67,7 +67,7 @@ export default class App extends React.Component<EO, AppState> {
                                             <User />
                                         </Route>
                                         <Route path="/clear">
-                                            <h1>Clear</h1>
+                                            <Clear />
                                         </Route>
                                         <Route path="/products">
                                             <h1>Products</h1>

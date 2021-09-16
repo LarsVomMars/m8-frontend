@@ -13,11 +13,16 @@ export enum ApiPermissions {
 
 export type EO = Record<string, never>;
 
-export interface IProduct {
-    _id: string;
+export interface IBasicProduct {
     name: string;
     price: number;
     amount: number;
     bottles_per_crate: number;
     permission: Permissions;
 }
+
+export interface IProduct extends IBasicProduct {
+    _id: string;
+}
+
+export type IProducts = Record<string, IBasicProduct>;

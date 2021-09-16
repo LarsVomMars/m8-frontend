@@ -1,72 +1,46 @@
 import React from "react";
-import { Button, InputAdornment, TextField } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import axios from "axios";
 
 import type { ChangeEvent, FormEvent } from "react";
 import type { AxiosError } from "axios";
 import type { EO } from "../types";
 
-import "./User.scss";
+import "./Clear.scss";
 
-export default class User extends React.Component<EO, UserState> {
+export default class Clear extends React.Component<EO, ClearState> {
     constructor(props: EO) {
         super(props);
-        this.state = {
-            balance: 0,
+        this.setState({
             adminQR: "",
             adminPin: "",
             userQR: "",
             userPin: "",
-        };
+        });
     }
+
+    onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        // eslint-disable-next-line
+        this.setState({ [name]: value } as Pick<ClearState, any>);
+    };
 
     onSubmit = async (event: FormEvent) => {
         event.preventDefault();
         try {
-            const resp = await axios.post(
-                `${process.env.REACT_APP_SERVER_URL}/api/user`,
-                this.state,
-                { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
-            );
-            console.log(resp);
+            // TODO: Request balance; Fire Swal
+            console.log("Wohoo");
         } catch (e) {
             console.error((e as AxiosError).response);
         }
     };
 
-    onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        // eslint-disable-next-line
-        this.setState({ [name]: value } as Pick<UserState, any>);
-    };
-
     render() {
-        const { balance, adminQR, adminPin, userQR, userPin } = this.state;
+        const { adminQR, adminPin, userQR, userPin } = this.state;
         return (
             <div className="page-div">
-                <h1 className="heading">User</h1>
-                <form className="user-form basic-form" onSubmit={this.onSubmit}>
-                    <TextField
-                        value={balance}
-                        onChange={this.onChange}
-                        type="number"
-                        variant="outlined"
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">€</InputAdornment>
-                            ),
-                            inputProps: {
-                                step: 0.1,
-                                min: 0,
-                                max: 100,
-                            },
-                        }}
-                        name="balance"
-                        label="Balance"
-                        size="small"
-                        className="user-form-input"
-                        required
-                    />
+                <h1 className="heading">Clear</h1>
+                <form className="clear-form basic-form" onSubmit={this.onSubmit}>
                     <TextField
                         value={adminQR}
                         onChange={this.onChange}
@@ -74,7 +48,7 @@ export default class User extends React.Component<EO, UserState> {
                         variant="outlined"
                         label="Admin QR"
                         size="small"
-                        className="user-form-input"
+                        className="clear-form-input"
                         required
                     />
                     <TextField
@@ -84,7 +58,7 @@ export default class User extends React.Component<EO, UserState> {
                         variant="outlined"
                         label="Admin Pin"
                         size="small"
-                        className="user-form-input"
+                        className="clear-form-input"
                         type="password"
                         required
                         InputProps={{
@@ -101,7 +75,7 @@ export default class User extends React.Component<EO, UserState> {
                         variant="outlined"
                         label="User QR"
                         size="small"
-                        className="user-form-input"
+                        className="clear-form-input"
                         required
                     />
                     <TextField
@@ -111,7 +85,7 @@ export default class User extends React.Component<EO, UserState> {
                         variant="outlined"
                         label="User Pin"
                         size="small"
-                        className="user-form-input"
+                        className="clear-form-input"
                         type="password"
                         required
                         InputProps={{
@@ -124,7 +98,7 @@ export default class User extends React.Component<EO, UserState> {
                     <Button
                         variant="contained"
                         color="primary"
-                        className="user-form-input"
+                        className="clear-form-input"
                         type="submit"
                     >
                         Submit
@@ -135,8 +109,7 @@ export default class User extends React.Component<EO, UserState> {
     }
 }
 
-export interface UserState {
-    balance: number;
+export interface ClearState {
     adminQR: string;
     adminPin: string;
     userQR: string;
