@@ -12,6 +12,8 @@ import type {
 } from "@material-ui/data-grid";
 import type { EO, IProduct, IProducts } from "../types";
 
+import { getURL, getKey } from "../util";
+
 import "./Products.scss";
 
 export const Permissions: string[] = ["Participant", "Mentor", "Infodesk", "Admin"];
@@ -27,15 +29,14 @@ export default class Products extends React.Component<EO, ProductsState> {
     }
 
     componentDidMount = async () => {
+        const URL = getURL();
+        const KEY = getKey();
         try {
-            const resp = await axios.get(
-                `${process.env.REACT_APP_SERVER_URL}/api/products/`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}`,
-                    },
-                }
-            );
+            const resp = await axios.get(`${URL}/api/products/`, {
+                headers: {
+                    Authorization: `Bearer ${KEY}`,
+                },
+            });
             this.parseProducts(resp.data.products);
             // this.setState({ products: resp.data.products });
             console.log(resp.data);
@@ -55,12 +56,12 @@ export default class Products extends React.Component<EO, ProductsState> {
     };
 
     save = async (product: IProduct) => {
+        const URL = getURL();
+        const KEY = getKey();
         try {
-            const resp = await axios.put(
-                `${process.env.REACT_APP_SERVER_URL}/api/products/`,
-                product,
-                { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
-            );
+            const resp = await axios.put(`${URL}/api/products/`, product, {
+                headers: { Authorization: `Bearer ${KEY}` },
+            });
             console.log(resp);
         } catch (e) {
             console.error((e as AxiosError).response);

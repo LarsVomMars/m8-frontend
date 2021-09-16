@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import axios from "axios";
 
 import type { AxiosError } from "axios";
-import { EO } from "../types";
+import { EO, ApiPermissions } from "../types";
 
 import Header from "../Header";
 import Start from "../Start";
@@ -11,46 +11,62 @@ import Deposit from "../Deposit";
 import Buy from "../Buy";
 import User from "../User";
 import Clear from "../Clear";
+import Setup from "../Setup";
+import Products from "../Products";
+
+import { getURL, getKey } from "../util";
 
 import "./App.global.scss";
-import Products from "../Products";
 
 export default class App extends React.Component<EO, AppState> {
     constructor(props: EO) {
         super(props);
         this.state = {
-            authorized: true,
+            available: true,
+            authorized: false,
             isUser: true,
             isAdmin: true,
         };
     }
 
     componentDidMount = async () => {
+        const URL = getURL();
+        const KEY = getKey();
+        if (!URL || !KEY) {
+            this.setState({ available: false });
+            return;
+        }
+        this.setState({ available: true });
         try {
-            const resp = await axios.get(`${process.env.REACT_APP_SERVER_URL}/auth/`, {
+            const resp = await axios.get(`${URL}/auth/`, {
                 headers: {
-                    Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}`,
+                    Authorization: `Bearer ${KEY}`,
                 },
             });
             console.log(resp.data);
-            // const { permission } = resp.data;
-            // this.setState({
-            //     isAdmin: permission === ApiPermissions.ADMIN,
-            //     isUser: permission === ApiPermissions.READ,
-            //     authorized: true,
-            // });
+            const { permission } = resp.data;
+            // Possible securiy risk in case of unavailable backend
+            this.setState({
+                isAdmin: permission === ApiPermissions.ADMIN,
+                isUser: permission === ApiPermissions.READ,
+                authorized: true,
+            });
         } catch (e) {
+            this.setState({ authorized: false });
             console.error((e as AxiosError).response);
         }
     };
 
     render() {
-        const { isUser, isAdmin, authorized } = this.state;
+        const { isUser, isAdmin, authorized, available } = this.state;
+        console.log(authorized, available);
         return (
             <div className="main-container">
                 <Header />
-                {authorized && isUser && (
-                    <div className="pages">
+                <div className="pages">
+                    {(!available || !authorized) && <Setup />}
+
+                    {available && authorized && isUser && (
                         <Router>
                             <Switch>
                                 <Route exact path="/">
@@ -83,14 +99,15 @@ export default class App extends React.Component<EO, AppState> {
                                 </Route>
                             </Switch>
                         </Router>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         );
     }
 }
 
 export interface AppState {
+    available: boolean;
     authorized: boolean;
     isUser: boolean;
     isAdmin: boolean;

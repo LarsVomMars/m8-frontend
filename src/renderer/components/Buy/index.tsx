@@ -13,6 +13,8 @@ import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
 import type { EO, IProduct } from "../types";
 
+import { getURL, getKey } from "../util";
+
 import "./Buy.scss";
 
 export default class Buy extends React.Component<EO, BuyState> {
@@ -29,15 +31,14 @@ export default class Buy extends React.Component<EO, BuyState> {
     }
 
     componentDidMount = async () => {
+        const URL = getURL();
+        const KEY = getKey();
         try {
-            const resp = await axios.get(
-                `${process.env.REACT_APP_SERVER_URL}/api/products/`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}`,
-                    },
-                }
-            );
+            const resp = await axios.get(`${URL}/api/products/`, {
+                headers: {
+                    Authorization: `Bearer ${KEY}`,
+                },
+            });
             this.setState({ products: resp.data.products as IProduct[] });
             console.log(resp.data);
         } catch (e) {
@@ -47,12 +48,12 @@ export default class Buy extends React.Component<EO, BuyState> {
 
     onSubmit = async (event: FormEvent) => {
         event.preventDefault();
+        const URL = getURL();
+        const KEY = getKey();
         try {
-            const resp = await axios.post(
-                `${process.env.REACT_APP_SERVER_URL}/api/transaction/buy`,
-                this.state,
-                { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
-            );
+            const resp = await axios.post(`${URL}/api/transaction/buy`, this.state, {
+                headers: { Authorization: `Bearer ${KEY}` },
+            });
             console.log(resp);
         } catch (e) {
             console.error((e as AxiosError).response);

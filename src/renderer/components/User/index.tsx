@@ -6,6 +6,8 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { AxiosError } from "axios";
 import type { EO } from "../types";
 
+import { getURL, getKey } from "../util";
+
 import "./User.scss";
 
 export default class User extends React.Component<EO, UserState> {
@@ -22,12 +24,12 @@ export default class User extends React.Component<EO, UserState> {
 
     onSubmit = async (event: FormEvent) => {
         event.preventDefault();
+        const URL = getURL();
+        const KEY = getKey();
         try {
-            const resp = await axios.post(
-                `${process.env.REACT_APP_SERVER_URL}/api/user`,
-                this.state,
-                { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
-            );
+            const resp = await axios.post(`${URL}/api/user`, this.state, {
+                headers: { Authorization: `Bearer ${KEY}` },
+            });
             console.log(resp);
         } catch (e) {
             console.error((e as AxiosError).response);

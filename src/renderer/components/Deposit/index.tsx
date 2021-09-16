@@ -5,6 +5,8 @@ import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
 import type { EO } from "../types";
 
+import { getURL, getKey } from "../util";
+
 import "./Deposit.scss";
 
 export default class Deposit extends React.Component<EO, DepositState> {
@@ -22,12 +24,12 @@ export default class Deposit extends React.Component<EO, DepositState> {
     onSubmit = async (event: FormEvent) => {
         // TODO: Swal
         event.preventDefault();
+        const URL = getURL();
+        const KEY = getKey();
         try {
-            const resp = await axios.put(
-                `${process.env.REACT_APP_SERVER_URL}/api/transaction/deposit`,
-                this.state,
-                { headers: { Authorization: `Bearer ${process.env.REACT_APP_AUTH_KEY}` } }
-            );
+            const resp = await axios.put(`${URL}/api/transaction/deposit`, this.state, {
+                headers: { Authorization: `Bearer ${KEY}` },
+            });
             console.log(resp);
         } catch (e) {
             console.error((e as AxiosError).response);
