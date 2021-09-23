@@ -3,14 +3,14 @@ import { TextField, Button, InputAdornment, IconButton } from "@material-ui/core
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 import type { ChangeEvent, FormEvent } from "react";
-import type { EO } from "../types";
 
 import { getURL, getKey } from "../util";
 
-export default class Setup extends React.Component<EO, SetupState> {
-    constructor(props: EO) {
+export default class Setup extends React.Component<SetupProps, SetupState> {
+    constructor(props: SetupProps) {
         super(props);
         this.state = {
+            ...props,
             serverURL: getURL(),
             authKey: getKey(),
             showKey: false,
@@ -37,7 +37,7 @@ export default class Setup extends React.Component<EO, SetupState> {
         this.setState({ showKey: !showKey });
     };
 
-    render() {
+    private renderSetup() {
         const { serverURL, authKey, showKey } = this.state;
         return (
             <div className="page-div">
@@ -69,7 +69,6 @@ export default class Setup extends React.Component<EO, SetupState> {
                                     <IconButton
                                         aria-label="toggle key visibility"
                                         onClick={this.onClickShowKey}
-                                        // onMouseDown={handleMouseDownPassword}
                                     >
                                         {showKey ? <Visibility /> : <VisibilityOff />}
                                     </IconButton>
@@ -89,9 +88,32 @@ export default class Setup extends React.Component<EO, SetupState> {
             </div>
         );
     }
+
+    private static renderUnavailable() {
+        // const tid = setTimeout(() => {
+        //     window.location.reload();
+        //     clearTimeout(tid);
+        // }, 15000);
+        return (
+            <div className="page-div">
+                <h1 className="heading">Server unavailable</h1>
+                <h3 className="heading">Please wait!</h3>
+            </div>
+        );
+    }
+
+    render() {
+        const { allow } = this.state;
+        console.log(allow);
+        return allow ? this.renderSetup() : Setup.renderUnavailable();
+    }
 }
 
-export interface SetupState {
+export interface SetupProps {
+    allow: boolean;
+}
+
+export interface SetupState extends SetupProps {
     serverURL: string;
     authKey: string;
     showKey: boolean;

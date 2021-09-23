@@ -23,9 +23,10 @@ export default class App extends React.Component<EO, AppState> {
         super(props);
         this.state = {
             available: true,
+            serverAvailable: false,
             authorized: false,
-            isUser: true,
-            isAdmin: true,
+            isUser: false,
+            isAdmin: false,
         };
     }
 
@@ -48,23 +49,30 @@ export default class App extends React.Component<EO, AppState> {
             // Possible securiy risk in case of unavailable backend
             this.setState({
                 isAdmin: permission === ApiPermissions.ADMIN,
-                isUser: permission === ApiPermissions.READ,
+                isUser:
+                    permission === ApiPermissions.READ ||
+                    permission === ApiPermissions.ADMIN,
                 authorized: true,
+                serverAvailable: true,
             });
         } catch (e) {
-            this.setState({ authorized: false });
-            console.error((e as AxiosError).response);
+            if (!(e as AxiosError).response?.status) {
+                this.setState({ serverAvailable: false });
+            } else {
+                this.setState({ authorized: false, serverAvailable: true });
+                console.error((e as AxiosError).response);
+            }
         }
     };
 
     render() {
-        const { isUser, isAdmin, authorized, available } = this.state;
-        console.log(authorized, available);
+        const { isUser, isAdmin, authorized, available, serverAvailable } = this.state;
+        console.log(this.state);
         return (
             <div className="main-container">
                 <Header />
                 <div className="pages">
-                    {(!available || !authorized) && <Setup />}
+                    {(!available || !authorized) && <Setup allow={serverAvailable} />}
 
                     {available && authorized && isUser && (
                         <Router>
@@ -108,6 +116,7 @@ export default class App extends React.Component<EO, AppState> {
 
 export interface AppState {
     available: boolean;
+    serverAvailable: boolean;
     authorized: boolean;
     isUser: boolean;
     isAdmin: boolean;

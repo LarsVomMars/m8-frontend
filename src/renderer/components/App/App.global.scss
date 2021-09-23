@@ -6,6 +6,8 @@
 @import "../Clear/Clear.scss";
 @import "../Products/Products.scss";
 
+@import "~@sweetalert2/theme-dark/dark.scss";
+
 @font-face {
     font-family: "Ubuntu";
     src: url("../../assets/fonts/Ubuntu.ttf");

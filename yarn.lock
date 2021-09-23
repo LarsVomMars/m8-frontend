@@ -1570,6 +1570,11 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@sweetalert2/theme-dark@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@sweetalert2/theme-dark/-/theme-dark-5.0.4.tgz#2be958c9b229139772258251bdc957320f7d3d32"
+  integrity sha512-KTCkKlOPLv1OagLYR69zSl2GJSXpnmvFUfp8VHPmDoshgZZJGf8XLFSfFSpcc7P4W5YVQl1aawMMTzlYMojxNA==
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -10743,6 +10748,11 @@ svgo@^2.3.0:
     css-tree "^1.1.2"
     csso "^4.2.0"
     stable "^0.1.8"
+
+sweetalert2@^11.1.5:
+  version "11.1.5"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.1.5.tgz#6bc0d681e8f83c744a9284a84aefbfdcc7d92bec"
+  integrity sha512-5cfqUK9lLbvxtjzsvORKWj+d3tcgYlzsL60FoJFXE/+mtMa5EJ3tDax9p9MBjVnZ60gQd+WGrqDIrxoNenhUjA==
 
 symbol-tree@^3.2.4:
   version "3.2.4"
