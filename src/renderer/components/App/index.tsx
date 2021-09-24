@@ -34,7 +34,7 @@ export default class App extends React.Component<EO, AppState> {
         const URL = getURL();
         const KEY = getKey();
         if (!URL || !KEY) {
-            this.setState({ available: false });
+            this.setState({ available: false, serverAvailable: true });
             return;
         }
         this.setState({ available: true });
@@ -72,7 +72,10 @@ export default class App extends React.Component<EO, AppState> {
             <div className="main-container">
                 <Header />
                 <div className="pages">
-                    {(!available || !authorized) && <Setup allow={serverAvailable} />}
+                    {(!available || !authorized) && (
+                        // That's why i hate React. Why tf do you need a key
+                        <Setup allow={serverAvailable} key={serverAvailable.toString()} />
+                    )}
 
                     {available && authorized && isUser && (
                         <Router>

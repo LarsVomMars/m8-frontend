@@ -1,0 +1,8 @@
+.setup-buttons {
+    display: flex;
+    flex-flow: column wrap;
+
+    > * {
+        margin: 5px !important;
+    }
+}

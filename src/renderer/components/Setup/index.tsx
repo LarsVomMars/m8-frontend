@@ -6,6 +6,8 @@ import type { ChangeEvent, FormEvent } from "react";
 
 import { getURL, getKey } from "../util";
 
+import "./Setup.scss";
+
 export default class Setup extends React.Component<SetupProps, SetupState> {
     constructor(props: SetupProps) {
         super(props);
@@ -94,17 +96,44 @@ export default class Setup extends React.Component<SetupProps, SetupState> {
         //     window.location.reload();
         //     clearTimeout(tid);
         // }, 15000);
+        const onClick = () => {
+            localStorage.removeItem("SERVER_URL");
+            localStorage.removeItem("AUTH_KEY");
+            window.location.reload();
+        };
+
+        const onReload = () => {
+            window.location.reload();
+        };
+
         return (
             <div className="page-div">
                 <h1 className="heading">Server unavailable</h1>
                 <h3 className="heading">Please wait!</h3>
+                <div className="setup-buttons">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        onClick={onReload}
+                    >
+                        Reload?
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        type="submit"
+                        onClick={onClick}
+                    >
+                        Delete data!
+                    </Button>
+                </div>
             </div>
         );
     }
 
     render() {
         const { allow } = this.state;
-        console.log(allow);
         return allow ? this.renderSetup() : Setup.renderUnavailable();
     }
 }
