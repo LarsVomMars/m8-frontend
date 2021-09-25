@@ -46,7 +46,7 @@ export default class App extends React.Component<EO, AppState> {
             });
             console.log(resp.data);
             const { permission } = resp.data;
-            // Possible securiy risk in case of unavailable backend
+            // Possible securiy risk in case of unavailable backend - should be fixed
             this.setState({
                 isAdmin: permission === ApiPermissions.ADMIN,
                 isUser:
@@ -73,7 +73,6 @@ export default class App extends React.Component<EO, AppState> {
                 <Header />
                 <div className="pages">
                     {(!available || !authorized) && (
-                        // That's why i hate React. Why tf do you need a key
                         <Setup allow={serverAvailable} key={serverAvailable.toString()} />
                     )}
 

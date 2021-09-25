@@ -22,8 +22,8 @@ export default class Header extends React.Component<EO, HeaderState> {
         event.preventDefault();
         const URL = getURL();
         const KEY = getKey();
+        const { qr } = this.state;
         try {
-            const { qr } = this.state;
             const response = await axios.get(`${URL}/api/user/${qr}`, {
                 headers: { Authorization: `Bearer ${KEY}` },
             });
@@ -37,6 +37,11 @@ export default class Header extends React.Component<EO, HeaderState> {
             });
         } catch (e) {
             console.error((e as AxiosError).response);
+            Swal.fire({
+                title: "Request failed!",
+                text: `${qr} not found!`,
+                icon: "error",
+            });
         }
     };
 
