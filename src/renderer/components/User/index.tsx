@@ -7,7 +7,7 @@ import {
     MenuItem,
     InputLabel,
     Select,
-} from "@material-ui/core";
+} from "@mui/material";
 import axios from "axios";
 
 import type { ChangeEvent, FormEvent } from "react";

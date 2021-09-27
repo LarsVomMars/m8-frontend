@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Button, InputAdornment, TextField } from "@material-ui/core";
+import { Button, InputAdornment, TextField } from "@mui/material";
 import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
 import type { EO } from "../types";

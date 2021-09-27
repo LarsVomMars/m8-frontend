@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button } from "@mui/material";
 
 import type { FormEvent } from "react";
 import type { AxiosError } from "axios";

@@ -1,6 +1,6 @@
 import React from "react";
-import { TextField, Button, InputAdornment, IconButton } from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { TextField, Button, InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import type { ChangeEvent, FormEvent } from "react";
 

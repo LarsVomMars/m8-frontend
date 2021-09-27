@@ -1,5 +1,5 @@
 import React from "react";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
 import type { AxiosError } from "axios";
@@ -9,7 +9,7 @@ import type {
     GridEditCellPropsParams,
     GridRowData,
     GridCellParams,
-} from "@material-ui/data-grid";
+} from "@mui/x-data-grid";
 import type { EO, IProduct, IProducts } from "../types";
 
 import { getURL, getKey, getStateFromURL } from "../util";

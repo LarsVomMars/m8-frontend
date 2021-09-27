@@ -7,10 +7,11 @@ import {
     MenuItem,
     Select,
     TextField,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
+import type { SelectChangeEvent } from "@mui/material";
 import type { EO, IProduct } from "../types";
 
 import { getURL, getKey, getStateFromURL } from "../util";
@@ -70,10 +71,10 @@ export default class Buy extends React.Component<EO, BuyState> {
         this.setState({ [name]: value } as Pick<BuyState, any>);
     };
 
-    onSelectChange = (event: ChangeEvent<{ name?: string; value: unknown }>) => {
-        const { name, value } = event.target as HTMLSelectElement;
+    onSelectChange = (event: SelectChangeEvent<string>) => {
+        const { name, value } = event.target;
         // eslint-disable-next-line
-        this.setState({ [name!]: value as string } as Pick<BuyState, any>);
+        this.setState({ [name]: value } as Pick<BuyState, any>);
     };
 
     render() {
