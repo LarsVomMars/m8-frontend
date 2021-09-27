@@ -1,9 +1,11 @@
-export enum Permissions {
+export enum EPermissions {
     TN,
     M,
     ID,
     SDA,
 }
+
+export const APermissions: string[] = ["Participant", "Mentor", "Infodesk", "Admin"];
 
 export enum ApiPermissions {
     READ,

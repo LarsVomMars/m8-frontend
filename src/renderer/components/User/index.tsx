@@ -1,16 +1,26 @@
 import React from "react";
-import { Button, InputAdornment, TextField } from "@material-ui/core";
+import {
+    Button,
+    InputAdornment,
+    TextField,
+    FormControl,
+    MenuItem,
+    InputLabel,
+    Select,
+} from "@material-ui/core";
 import axios from "axios";
 
 import type { ChangeEvent, FormEvent } from "react";
 import type { AxiosError } from "axios";
 import type { EO } from "../types";
 
+import { EPermissions, APermissions } from "../types";
 import { getURL, getKey, getStateFromURL } from "../util";
 
 import "./User.scss";
 
 export default class User extends React.Component<EO, UserState> {
+    // TODO: Add permission select
     constructor(props: EO) {
         super(props);
         this.state = {
@@ -19,6 +29,7 @@ export default class User extends React.Component<EO, UserState> {
             adminPin: "",
             userQR: "",
             userPin: "",
+            permission: EPermissions.TN,
         };
     }
 
@@ -47,8 +58,14 @@ export default class User extends React.Component<EO, UserState> {
         this.setState({ [name]: value } as Pick<UserState, any>);
     };
 
+    onSelectChange = (event: ChangeEvent<{ name?: string; value: unknown }>) => {
+        const { name, value } = event.target as HTMLSelectElement;
+        // eslint-disable-next-line
+        this.setState({ [name!]: value as string } as Pick<UserState, any>);
+    };
+
     render() {
-        const { balance, adminQR, adminPin, userQR, userPin } = this.state;
+        const { balance, adminQR, adminPin, userQR, userPin, permission } = this.state;
         return (
             <div className="page-div">
                 <h1 className="heading">User</h1>
@@ -128,6 +145,30 @@ export default class User extends React.Component<EO, UserState> {
                             },
                         }}
                     />
+                    <FormControl
+                        variant="outlined"
+                        className="buy-form-select"
+                        size="small"
+                    >
+                        <InputLabel htmlFor="user-select">Permission</InputLabel>
+                        <Select
+                            id="user-select"
+                            value={permission}
+                            onChange={this.onSelectChange}
+                            label="Permission"
+                            name="permission"
+                            required
+                        >
+                            {Object.keys(EPermissions)
+                                .filter((p) => !Number.isNaN(+p))
+                                .map(Number)
+                                .map((p: number) => (
+                                    <MenuItem value={p} key={p}>
+                                        {APermissions[p]}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </FormControl>
                     <Button
                         variant="contained"
                         color="primary"
@@ -148,4 +189,5 @@ export interface UserState {
     adminPin: string;
     userQR: string;
     userPin: string;
+    permission: EPermissions;
 }

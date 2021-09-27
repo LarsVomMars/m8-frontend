@@ -13,10 +13,9 @@ import type {
 import type { EO, IProduct, IProducts } from "../types";
 
 import { getURL, getKey, getStateFromURL } from "../util";
+import { APermissions as Permissions } from "../types";
 
 import "./Products.scss";
-
-export const Permissions: string[] = ["Participant", "Mentor", "Infodesk", "Admin"];
 
 export const renderPermission = (params: GridCellParams) => (
     <div>{Permissions[Number(params.value)]}</div>
