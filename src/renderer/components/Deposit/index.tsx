@@ -5,7 +5,7 @@ import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
 import type { EO } from "../types";
 
-import { getURL, getKey } from "../util";
+import { getURL, getKey, getStateFromURL } from "../util";
 
 import "./Deposit.scss";
 
@@ -19,6 +19,11 @@ export default class Deposit extends React.Component<EO, DepositState> {
             userQR: "",
             userPin: "",
         };
+    }
+
+    componentDidMount() {
+        const newState = getStateFromURL<DepositState>(this.state);
+        this.setState({ ...newState });
     }
 
     onSubmit = async (event: FormEvent) => {

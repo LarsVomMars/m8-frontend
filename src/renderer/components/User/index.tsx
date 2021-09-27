@@ -6,7 +6,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { AxiosError } from "axios";
 import type { EO } from "../types";
 
-import { getURL, getKey } from "../util";
+import { getURL, getKey, getStateFromURL } from "../util";
 
 import "./User.scss";
 
@@ -20,6 +20,11 @@ export default class User extends React.Component<EO, UserState> {
             userQR: "",
             userPin: "",
         };
+    }
+
+    componentDidMount() {
+        const newState = getStateFromURL<UserState>(this.state);
+        this.setState({ ...newState });
     }
 
     onSubmit = async (event: FormEvent) => {

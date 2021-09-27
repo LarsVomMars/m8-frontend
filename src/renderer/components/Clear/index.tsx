@@ -4,6 +4,7 @@ import { TextField, Button } from "@material-ui/core";
 
 import type { ChangeEvent, FormEvent } from "react";
 import type { AxiosError } from "axios";
+import { getStateFromURL } from "../util";
 import type { EO } from "../types";
 
 import "./Clear.scss";
@@ -17,6 +18,11 @@ export default class Clear extends React.Component<EO, ClearState> {
             userQR: "",
             userPin: "",
         };
+    }
+
+    componentDidMount() {
+        const newState = getStateFromURL<ClearState>(this.state);
+        this.setState({ ...newState });
     }
 
     onChange = (event: ChangeEvent<HTMLInputElement>) => {

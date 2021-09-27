@@ -13,7 +13,7 @@ import type { AxiosError } from "axios";
 import type { ChangeEvent, FormEvent } from "react";
 import type { EO, IProduct } from "../types";
 
-import { getURL, getKey } from "../util";
+import { getURL, getKey, getStateFromURL } from "../util";
 
 import "./Buy.scss";
 
@@ -44,6 +44,10 @@ export default class Buy extends React.Component<EO, BuyState> {
         } catch (e) {
             console.error((e as AxiosError).response);
         }
+
+        // Get parameters from GET if they exist
+        const newState = getStateFromURL<BuyState>(this.state);
+        this.setState({ ...newState });
     };
 
     onSubmit = async (event: FormEvent) => {

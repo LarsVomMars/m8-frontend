@@ -12,7 +12,7 @@ import type {
 } from "@material-ui/data-grid";
 import type { EO, IProduct, IProducts } from "../types";
 
-import { getURL, getKey } from "../util";
+import { getURL, getKey, getStateFromURL } from "../util";
 
 import "./Products.scss";
 
@@ -43,6 +43,9 @@ export default class Products extends React.Component<EO, ProductsState> {
         } catch (e) {
             console.error((e as AxiosError).response);
         }
+
+        const newState = getStateFromURL<ProductsState>(this.state);
+        this.setState({ ...newState });
     };
 
     onChange = (params: GridCellEditCommitParams) => {
