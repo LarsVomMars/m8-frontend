@@ -1,5 +1,8 @@
-export const getURL = () => localStorage.getItem("SERVER_URL") || "";
-export const getKey = () => localStorage.getItem("AUTH_KEY") || "";
+export const getURL = (): string => localStorage.getItem("SERVER_URL") || "";
+export const getKey = (): string => localStorage.getItem("AUTH_KEY") || "";
+
+export const buildURL = (path: string): string => `${getURL()}${path}`;
+export const buildHeader = () => ({ Authorization: `Bearer ${getKey()}` });
 
 export function getStateFromURL<T>(currentState: T): T {
     const params = new URL(window.location.href).searchParams;
