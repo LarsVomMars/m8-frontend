@@ -1,189 +1,88 @@
 import React from "react";
 import axios from "axios";
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-} from "@mui/material";
+import Swal from "sweetalert2";
 
-import type { AxiosError } from "axios";
-import type { ChangeEvent, FormEvent } from "react";
-import type { SelectChangeEvent } from "@mui/material";
+import type { AxiosError, AxiosResponse } from "axios";
 import type { EO, IProduct } from "../types";
+import type { FormElements } from "../Form";
 
-import { getURL, getKey, getStateFromURL } from "../util";
-
-import "./Buy.scss";
+import { buildURL, buildHeader } from "../util";
+import Form from "../Form";
 
 export default class Buy extends React.Component<EO, BuyState> {
     constructor(props: EO) {
         super(props);
         this.state = {
-            pid: "",
-            adminQR: "",
-            adminPin: "",
-            userQR: "",
-            userPin: "",
             products: [],
         };
     }
 
     componentDidMount = async () => {
-        const URL = getURL();
-        const KEY = getKey();
+        const url = buildURL("/api/products/");
+        const headers = buildHeader();
         try {
-            const resp = await axios.get(`${URL}/api/products/`, {
-                headers: {
-                    Authorization: `Bearer ${KEY}`,
-                },
-            });
+            const resp = await axios.get(url, { headers });
             this.setState({ products: resp.data.products as IProduct[] });
             console.log(resp.data);
         } catch (e) {
             console.error((e as AxiosError).response);
         }
-
-        // Get parameters from GET if they exist
-        const newState = getStateFromURL<BuyState>(this.state);
-        this.setState({ ...newState });
     };
 
-    onSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        const URL = getURL();
-        const KEY = getKey();
-        try {
-            const resp = await axios.post(`${URL}/api/transaction/buy`, this.state, {
-                headers: { Authorization: `Bearer ${KEY}` },
-            });
-            console.log(resp);
-        } catch (e) {
-            console.error((e as AxiosError).response);
+    private static onSuccess(response: AxiosResponse) {
+        Swal.fire("Transaction successful", `Remaining balance ${response.data.balance}`);
+    }
+
+    private static onError(error: unknown) {
+        if ((error as AxiosError).response) {
+            Swal.fire(
+                "Error",
+                JSON.stringify((error as AxiosError).response?.data),
+                "error"
+            );
         }
-    };
-
-    onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        // eslint-disable-next-line
-        this.setState({ [name]: value } as Pick<BuyState, any>);
-    };
-
-    onSelectChange = (event: SelectChangeEvent<string>) => {
-        const { name, value } = event.target;
-        // eslint-disable-next-line
-        this.setState({ [name]: value } as Pick<BuyState, any>);
-    };
+    }
 
     render() {
-        const { pid, userQR, userPin, adminQR, adminPin, products } = this.state;
+        const { products } = this.state;
+        const elements: FormElements = [
+            {
+                name: "pid",
+                label: "Product",
+                type: "select",
+                required: true,
+                selectOptions: [
+                    { displayName: "None", value: "-1", selected: true, disabled: true },
+                    ...products.map((p) => ({
+                        displayName: `${p.name} - ${p.price}€`,
+                        value: p._id,
+                        disabled: p.amount === 0,
+                    })),
+                ],
+            },
+            { name: "adminQR", label: "Admin QR", type: "text", required: true },
+            { name: "adminPin", label: "Admin Pin", type: "password", required: true },
+            { name: "userQR", label: "User QR", type: "text", required: true },
+            { name: "userPin", label: "User Pin", type: "password", required: true },
+            { name: "", label: "Buy", type: "submit" },
+        ];
+
         return (
             <div className="page-div">
                 <h1 className="heading">Buy</h1>
-                <form className="buy-form basic-form">
-                    <FormControl
-                        variant="outlined"
-                        className="buy-form-select"
-                        size="small"
-                    >
-                        <InputLabel htmlFor="buy-select">Product</InputLabel>
-                        <Select
-                            id="buy-select"
-                            value={pid}
-                            onChange={this.onSelectChange}
-                            label="Product"
-                            name="pid"
-                            required
-                        >
-                            <MenuItem value="" key="-1" disabled>
-                                <em>None</em>
-                            </MenuItem>
-                            {products.map((product) => (
-                                <MenuItem
-                                    value={product._id}
-                                    disabled={product.amount === 0}
-                                    key={product._id}
-                                >
-                                    {product.name} - {product.price}€
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <TextField
-                        value={adminQR}
-                        onChange={this.onChange}
-                        name="adminQR"
-                        variant="outlined"
-                        label="Admin QR"
-                        size="small"
-                        className="buy-form-input"
-                        required
-                    />
-                    <TextField
-                        value={adminPin}
-                        onChange={this.onChange}
-                        name="adminPin"
-                        variant="outlined"
-                        label="Admin Pin"
-                        size="small"
-                        className="buy-form-input"
-                        type="password"
-                        required
-                        InputProps={{
-                            inputProps: {
-                                minLength: 4,
-                                maxLength: 4,
-                            },
-                        }}
-                    />
-                    <TextField
-                        value={userQR}
-                        onChange={this.onChange}
-                        name="userQR"
-                        variant="outlined"
-                        label="User QR"
-                        size="small"
-                        className="buy-form-input"
-                        required
-                    />
-                    <TextField
-                        value={userPin}
-                        onChange={this.onChange}
-                        name="userPin"
-                        variant="outlined"
-                        label="User Pin"
-                        size="small"
-                        className="buy-form-input"
-                        type="password"
-                        required
-                        InputProps={{
-                            inputProps: {
-                                minLength: 4,
-                                maxLength: 4,
-                            },
-                        }}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className="buy-form-input"
-                        type="submit"
-                    >
-                        Submit
-                    </Button>
-                </form>
+                <Form
+                    elements={elements}
+                    method="post"
+                    url="/api/transaction/buy"
+                    key={products.length.toString()}
+                    onSuccess={Buy.onSuccess}
+                    onError={Buy.onError}
+                />
             </div>
         );
     }
 }
 
 export interface BuyState {
-    pid: string;
-    adminQR: string;
-    adminPin: string;
-    userQR: string;
-    userPin: string;
     products: IProduct[];
 }
