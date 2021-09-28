@@ -1,123 +1,68 @@
 import React from "react";
-import { TextField, Button } from "@mui/material";
-// import axios from "axios";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-import type { ChangeEvent, FormEvent } from "react";
 import type { AxiosError } from "axios";
-import { getStateFromURL } from "../util";
-import type { EO } from "../types";
+import type { FormElements } from "../Form";
 
-import "./Clear.scss";
+import { buildURL, buildHeader } from "../util";
+import Form from "../Form";
 
-export default class Clear extends React.Component<EO, ClearState> {
-    constructor(props: EO) {
-        super(props);
-        this.state = {
-            adminQR: "",
-            adminPin: "",
-            userQR: "",
-            userPin: "",
-        };
-    }
+export async function onSubmit(data: Record<string, string | number>) {
+    console.log(data);
 
-    componentDidMount() {
-        const newState = getStateFromURL<ClearState>(this.state);
-        this.setState({ ...newState });
-    }
+    try {
+        const headers = buildHeader();
+        const resp = await axios.get(buildURL(`/api/user/${data.userQR}`), { headers });
+        const { balance } = resp.data;
 
-    onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        // eslint-disable-next-line
-        this.setState({ [name]: value } as Pick<ClearState, any>);
-    };
+        const result = await Swal.fire(
+            `Clear account of ${data.userQR}?`,
+            `Pay out balance: ${balance}`,
+            "question"
+        );
 
-    onSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        try {
-            // TODO: Request balance; Fire Swal
-            console.log("Wohoo");
-        } catch (e) {
-            console.error((e as AxiosError).response);
+        if (result.isConfirmed) {
+            try {
+                const clearResp = await axios.put(
+                    buildURL(`/api/transaction/clear`),
+                    data,
+                    { headers }
+                );
+                console.log(clearResp);
+                Swal.fire("Account cleared!");
+            } catch (e) {
+                console.error("2:", e);
+                Swal.fire(
+                    "Could not clear account!",
+                    JSON.stringify((e as AxiosError).response?.data),
+                    "error"
+                );
+            }
         }
-    };
-
-    render() {
-        const { adminQR, adminPin, userQR, userPin } = this.state;
-        return (
-            <div className="page-div">
-                <h1 className="heading">Clear</h1>
-                <form className="clear-form basic-form" onSubmit={this.onSubmit}>
-                    <TextField
-                        value={adminQR}
-                        onChange={this.onChange}
-                        name="adminQR"
-                        variant="outlined"
-                        label="Admin QR"
-                        size="small"
-                        className="clear-form-input"
-                        required
-                    />
-                    <TextField
-                        value={adminPin}
-                        onChange={this.onChange}
-                        name="adminPin"
-                        variant="outlined"
-                        label="Admin Pin"
-                        size="small"
-                        className="clear-form-input"
-                        type="password"
-                        required
-                        InputProps={{
-                            inputProps: {
-                                minLength: 4,
-                                maxLength: 4,
-                            },
-                        }}
-                    />
-                    <TextField
-                        value={userQR}
-                        onChange={this.onChange}
-                        name="userQR"
-                        variant="outlined"
-                        label="User QR"
-                        size="small"
-                        className="clear-form-input"
-                        required
-                    />
-                    <TextField
-                        value={userPin}
-                        onChange={this.onChange}
-                        name="userPin"
-                        variant="outlined"
-                        label="User Pin"
-                        size="small"
-                        className="clear-form-input"
-                        type="password"
-                        required
-                        InputProps={{
-                            inputProps: {
-                                minLength: 4,
-                                maxLength: 4,
-                            },
-                        }}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className="clear-form-input"
-                        type="submit"
-                    >
-                        Submit
-                    </Button>
-                </form>
-            </div>
+    } catch (e) {
+        console.error("1:", e);
+        Swal.fire(
+            "Could not clear account!",
+            JSON.stringify((e as AxiosError).response?.data),
+            "error"
         );
     }
 }
 
-export interface ClearState {
-    adminQR: string;
-    adminPin: string;
-    userQR: string;
-    userPin: string;
+export default function Clear() {
+    const elements: FormElements = [
+        { name: "adminQR", label: "Admin QR", type: "text", required: true },
+        { name: "adminPin", label: "Admin Pin", type: "password", required: true },
+        { name: "userQR", label: "User QR", type: "text", required: true },
+        { name: "userPin", label: "User Pin", type: "password", required: true },
+        { name: "", label: "Clear", type: "submit" },
+    ];
+
+    return (
+        <div className="page-div">
+            <h1 className="heading">Clear</h1>
+            <Form elements={elements} method="get" url="" onSubmit={onSubmit} />
+        </div>
+    );
 }

@@ -25,8 +25,6 @@ import { APermissions as Permissions, EPermissions } from "../types";
 
 import { getURL, getKey } from "../util";
 
-import "./Products.scss";
-
 export const renderPermission = (params: GridCellParams) => (
     <div>{Permissions[Number(params.value)]}</div>
 );

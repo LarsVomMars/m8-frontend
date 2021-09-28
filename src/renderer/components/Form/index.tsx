@@ -43,7 +43,20 @@ export default class Form extends React.Component<FormProps, FormState> {
 
     private onSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        const { onSuccess, onError, state: data, method, url: path } = this.state;
+        const {
+            onSubmit,
+            onSuccess,
+            onError,
+            state: data,
+            method,
+            url: path,
+        } = this.state;
+
+        if (onSubmit) {
+            onSubmit(data);
+            return;
+        }
+
         try {
             const url = buildURL(path);
             const headers = buildHeader();
@@ -133,6 +146,7 @@ export default class Form extends React.Component<FormProps, FormState> {
 
 export interface FormProps {
     elements: FormElements;
+    onSubmit?: (event: Record<string, string | number>) => Promise<void>;
     onSuccess?: (response: AxiosResponse) => void;
     onError?: (error: unknown) => void;
     method: Method;

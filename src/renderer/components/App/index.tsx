@@ -82,7 +82,7 @@ export default class App extends React.Component<EO, AppState> {
                                     <Start admin={isAdmin} />
                                 </Route>
                                 {isAdmin && (
-                                    <div>
+                                    <>
                                         <Route path="/deposit">
                                             <Deposit />
                                         </Route>
@@ -101,8 +101,9 @@ export default class App extends React.Component<EO, AppState> {
                                         <Route path="/admin">
                                             <h1>Admin</h1>
                                         </Route>
-                                    </div>
+                                    </>
                                 )}
+
                                 <Route path="*">
                                     <Redirect to="/" />
                                 </Route>

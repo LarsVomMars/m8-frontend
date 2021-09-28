@@ -12,6 +12,8 @@
 <script>
     window.electron.ipcRenderer.once('ipc-example', console.log);
     window.electron.ipcRenderer.myPing();
+
+    if (window.location.pathname === "/index.html") window.location.replace("/");
 </script>
 
 </html>
