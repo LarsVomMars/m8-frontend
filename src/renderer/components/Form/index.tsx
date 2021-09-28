@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import type { ChangeEvent, FormEvent } from "react";
-import type { SelectChangeEvent } from "@mui/material";
+import type { SelectChangeEvent, OutlinedInputProps } from "@mui/material";
 import type { Method, AxiosResponse } from "axios";
 
 import { buildURL, buildHeader } from "../util";
@@ -57,7 +57,7 @@ export default class Form extends React.Component<FormProps, FormState> {
     private onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         const { state } = this.state;
-        state[name] = value;
+        state[name] = +value || value;
         this.setState({ state });
     };
 
@@ -70,7 +70,7 @@ export default class Form extends React.Component<FormProps, FormState> {
 
     private buildInput(element: FormElement) {
         const { state } = this.state;
-        const { name, type, label, required } = element;
+        const { name, type, label, required, inputProps } = element;
         return (
             <TextField
                 variant="outlined"
@@ -82,6 +82,7 @@ export default class Form extends React.Component<FormProps, FormState> {
                 required={required}
                 key={name}
                 onChange={this.onChange}
+                InputProps={inputProps}
             />
         );
     }
@@ -148,12 +149,13 @@ export interface FormElement {
     type: string;
     required?: boolean;
     selectOptions?: FormOptionElement[];
+    inputProps?: Partial<OutlinedInputProps>;
 }
 
 export type FormElements = FormElement[];
 
 export interface FormOptionElement {
-    value: string;
+    value: string | number;
     displayName: string;
     selected?: boolean;
     disabled?: boolean;

@@ -6,6 +6,8 @@ module.exports = {
         "no-console": "off",
         "no-underscore-dangle": "off",
         "no-restricted-syntax": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars-experimental": "warn",
     },
     parserOptions: {
         ecmaVersion: 2020,

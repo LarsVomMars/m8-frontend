@@ -40,7 +40,7 @@ export default class Buy extends React.Component<EO, BuyState> {
                 JSON.stringify((error as AxiosError).response?.data),
                 "error"
             );
-        }
+        } else console.error(error);
     }
 
     render() {
