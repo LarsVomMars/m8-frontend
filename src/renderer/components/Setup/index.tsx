@@ -30,7 +30,6 @@ export default class Setup extends React.Component<SetupProps, SetupState> {
         const { serverURL, authKey } = this.state;
         localStorage.setItem("SERVER_URL", serverURL);
         localStorage.setItem("AUTH_KEY", authKey);
-        console.log(this.state);
         window.location.reload();
     };
 

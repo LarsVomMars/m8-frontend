@@ -20,7 +20,7 @@ export interface IBasicProduct {
     price: number;
     amount: number;
     bottles_per_crate: number;
-    permission: Permissions;
+    permission: EPermissions;
 }
 
 export interface IProduct extends IBasicProduct {

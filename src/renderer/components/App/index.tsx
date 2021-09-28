@@ -44,7 +44,7 @@ export default class App extends React.Component<EO, AppState> {
                     Authorization: `Bearer ${KEY}`,
                 },
             });
-            console.log(resp.data);
+            // console.log(resp.data);
             const { permission } = resp.data;
             // Possible securiy risk in case of unavailable backend - should be fixed
             this.setState({
@@ -67,7 +67,6 @@ export default class App extends React.Component<EO, AppState> {
 
     render() {
         const { isUser, isAdmin, authorized, available, serverAvailable } = this.state;
-        console.log(this.state);
         return (
             <div className="main-container">
                 <Header />
