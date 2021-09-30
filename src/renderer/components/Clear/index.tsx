@@ -9,8 +9,6 @@ import { buildURL, buildHeader } from "../util";
 import Form from "../Form";
 
 export async function onSubmit(data: Record<string, string | number>) {
-    console.log(data);
-
     try {
         const headers = buildHeader();
         const resp = await axios.get(buildURL(`/api/user/${data.userQR}`), { headers });
