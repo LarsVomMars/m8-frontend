@@ -16,7 +16,6 @@ import type {
     GridColumns,
     GridEditRowsModel,
     GridRowData,
-    GridCellParams,
     GridRowId,
 } from "@mui/x-data-grid";
 
@@ -24,10 +23,6 @@ import type { EO, IBasicProduct, IProduct, IProducts } from "../types";
 import { APermissions as Permissions, EPermissions } from "../types";
 
 import { getURL, getKey } from "../util";
-
-export const renderPermission = (params: GridCellParams) => (
-    <div>{Permissions[Number(params.value)]}</div>
-);
 
 export default class Products extends React.Component<EO, ProductsState> {
     constructor(props: EO) {
@@ -46,22 +41,20 @@ export default class Products extends React.Component<EO, ProductsState> {
             const products = this.parseProducts(resp.data.products);
 
             const rows: GridRowData[] = [];
-            // rows.push("asdf");
-            console.log(rows, products);
             for (const [id, product] of Object.entries(products)) {
                 rows.push({
+                    ...product,
                     id,
                     crates: Math.floor(product.amount),
                     bottles: (product.amount % 1) * product.bottles_per_crate,
-                    ...product,
+                    permission: Permissions[product.permission],
                 });
             }
-            console.log("HELP:", rows);
             this.setState({ rows });
 
             console.log(resp.data);
         } catch (e) {
-            console.log(e);
+            console.error(e);
             console.error((e as AxiosError).response);
         }
     };
@@ -83,7 +76,6 @@ export default class Products extends React.Component<EO, ProductsState> {
     };
 
     add = async (product: IBasicProduct) => {
-        console.log(product);
         const URL = getURL();
         const KEY = getKey();
         try {
@@ -117,7 +109,7 @@ export default class Products extends React.Component<EO, ProductsState> {
             (model.crates.value as number) +
             (model.bottles.value as number) / (model.bottles_per_crate.value as number),
         bottles_per_crate: model.bottles_per_crate.value as number,
-        permission: model.permission.value as EPermissions,
+        permission: Permissions.indexOf(model.permission.value as string),
     });
 
     private parseProducts = (prods: IProduct[]) => {
@@ -144,7 +136,6 @@ export default class Products extends React.Component<EO, ProductsState> {
     };
 
     private toolbar = () => {
-        // const handleClick = () => console.log(apiRef);
         return (
             <GridToolbarContainer>
                 <Button
@@ -194,8 +185,8 @@ export default class Products extends React.Component<EO, ProductsState> {
                 headerName: "Permission",
                 editable: true,
                 width: 150,
-                type: "number",
-                renderCell: renderPermission,
+                type: "singleSelect",
+                valueOptions: Permissions,
             },
         ];
 
@@ -233,8 +224,3 @@ export const rowMap = (product: IProduct): GridRowData => ({
     bottles: (product.amount % 1) * product.bottles_per_crate,
     ...product,
 });
-
-export const editPermission = () => {
-    // TODO: Select like Buy
-    return <div>test</div>;
-};
